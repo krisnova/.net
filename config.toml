@@ -1,0 +1,40 @@
+title = "Kris Nóva"
+baseURL = 'https://krisnova.net/'
+languageCode = 'en-us'
+theme = "hugo-blog-awesome"
+
+
+# set markup.highlight.noClasses=false to enable code highlight
+[markup]
+  [markup.highlight]
+    noClasses = false
+
+[menu]
+  [[menu.main]] 
+    # The page reference (pageRef) is useful for menu highlighting
+    # When pageRef is set, setting `url` is optional; it will be used as a fallback if the page is not found.
+    pageRef="/"
+    name = 'Home'
+    url = '/'
+    weight = 10
+  [[menu.main]]
+    pageRef="posts"
+    name = 'Posts'
+    url = '/posts/'
+    weight = 20
+  [[menu.main]]
+    pageRef="bio"
+    name = 'Bio'
+    url = '/bio/'
+    weight = 30
+
+[params]
+  sitename = "Kris Nóva"
+  defaultColor = "dark"
+  description = "Minimal Hugo blog theme with light and dark mode support"
+
+[params.author]
+  avatar = "img/nova.jpg"
+  intro = "Kris Nóva"
+  name = "Kris Nóva"
+  description = "Complete Technical Works"
