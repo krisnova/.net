@@ -1,8 +1,8 @@
 ---
-title: Linux "Accept Queues"
+title: "Linux Accept Queues: managing latency in the network stack"
 date: 2023-03-10
 author: Kris Nóva
-description: Every Linux socket server is subject to inbound connection and request queueing at runtime. Learn how the kernel socket queue works, and how to observe their states at runtime.
+description: Every Linux socket server is subject to inbound connection and request queueing at runtime. Learn how the kernel accept queue works, and how to observe it at runtime.
 tags:
   - Linux
   - Kernel
@@ -15,6 +15,7 @@ tags:
 ---
 
 All complex systems can, and in my opinion should, be modelled and reasoned about as a collection of queues, caches, connections, and workers.
+In Linux, this type of abstract modeling is not only just a good idea, it reflects quite literally how the kernel is built.
 
 ```goat
                Inbound Connections
@@ -40,11 +41,8 @@ All complex systems can, and in my opinion should, be modelled and reasoned abou
 
 ```
 
-In Linux, all inbound requests from an arbitrary client will pass through the kernel accept queue, which is an instance of a [request_sock_queue](https://github.com/torvalds/linux/blob/v6.2/include/net/request_sock.h#L168-L188) struct.
-This is true for any socket server (TCP/IPv4, TCP/IPv6, Unix domain, UDP/connectionless) built using the Linux network stack or the `/include/net` directory in the source tree.
-
-Inbound requests may accumulate at runtime which exist in between the moment a server has received the connection from the network stack, and the moment a worker has called `accept()` to pop the connection pointer off the stack.
-The kernel accept queue is a trivial FIFO queue implementation, with some nuance surrounding TFO or [TCP Fast Open](https://netty.io/wiki/tcp-fast-open.html#:~:text=Preface,response%20time%20in%20certain%20cases) which speeds up TCP using cookies and was originally presented by Google in 2011 [TCP Fast Open 2011 PDF](http://conferences.sigcomm.org/co-next/2011/papers/1569470463.pdf).
+The Linux kernel is composed of thousands of interdependent code paths that are capable of producing millions of events per second.
+These code paths heavily leverage queue and stack mechanics in order to keep the kernel operating smoothly.
 
 ```c 
 // include/net/request_sock.h v6.2
@@ -69,6 +67,15 @@ struct request_sock_queue {
 	struct fastopen_queue	fastopenq;
 };
 ```
+
+In Linux, all inbound network requests from an arbitrary client will pass through the kernel accept queue, which is an instance of a [request_sock_queue](https://github.com/torvalds/linux/blob/v6.2/include/net/request_sock.h#L168-L188) struct.
+This is true for any socket server (TCP/IPv4, TCP/IPv6, Unix domain, UDP/connectionless) built using the Linux network stack or the `/include/net` directory in the source tree.
+
+Inbound requests may accumulate at runtime which exist in between the moment a server has received the connection from the network stack, and the moment a worker has called `accept()` to pop the connection pointer off the stack. 
+
+As these requests begin to queue, problems arise such as slow user experience or wasted compute resources due to saturated services.
+
+The kernel accept queue is a trivial FIFO queue implementation, with some nuance surrounding TFO or [TCP Fast Open](https://netty.io/wiki/tcp-fast-open.html#:~:text=Preface,response%20time%20in%20certain%20cases) which speeds up TCP while also establishing SYN cookies. TFO was originally presented by Google in 2011 [TCP Fast Open 2011 PDF](http://conferences.sigcomm.org/co-next/2011/papers/1569470463.pdf) and is now the default implementation for opening sockets in the kernel.
 
 If the network stack receives requests at a faster rate than the workers can process the requests, the accept queue grows.
 
