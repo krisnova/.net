@@ -217,6 +217,49 @@ Now -- the question remains how does one observe the state of these queues? More
 In order to observe the queues you will first want to understand which specific accept queues you believe to be interesting on your servers.
 There are many instances of the [request_sock_queue](https://github.com/torvalds/linux/blob/v6.2/include/net/request_sock.h#L168-L188) specifically found primarily in the net core and net TCP sections of the network code in Linux.
 
-TODO BCC is the easiest with kprobe
-TODO Also sysdig?
+Specifically there are 4 types of connections that most enterprise services will find interesting:
+
+ - TCP/IPv4
+ - TCP/IPv6
+ - Unix domain
+ - UDP (connectionless)
+
+We are interested in observing the moment a connection is added to an accept queue, as well as the moment a connection is removed from an accept queue.
+
+To do this we need to instrument the functions of the kernel where these events occur. Specifically we are interested in the `qlen` field in the `fastopen_queue` struct found in `include/net/request_sock.h`.
+
+```c
+/*
+ * For a TCP Fast Open listener -
+ *	lock - protects the access to all the reqsk, which is co-owned by
+ *		the listener and the child socket.
+ *	qlen - pending TFO requests (still in TCP_SYN_RECV).
+ *	max_qlen - max TFO reqs allowed before TFO is disabled.
+ *
+ *	XXX (TFO) - ideally these fields can be made as part of "listen_sock"
+ *	structure above. But there is some implementation difficulty due to
+ *	listen_sock being part of request_sock_queue hence will be freed when
+ *	a listener is stopped. But TFO related fields may continue to be
+ *	accessed even after a listener is closed, until its sk_refcnt drops
+ *	to 0 implying no more outstanding TFO reqs. One solution is to keep
+ *	listen_opt around until	sk_refcnt drops to 0. But there is some other
+ *	complexity that needs to be resolved. E.g., a listener can be disabled
+ *	temporarily through shutdown()->tcp_disconnect(), and re-enabled later.
+ */
+struct fastopen_queue {
+	struct request_sock	*rskq_rst_head; /* Keep track of past TFO */
+	struct request_sock	*rskq_rst_tail; /* requests that caused RST.
+						 * This is part of the defense
+						 * against spoofing attack.
+						 */
+	spinlock_t	lock;
+	int		qlen;		/* # of pending (TCP_SYN_RECV) reqs */
+	int		max_qlen;	/* != 0 iff TFO is currently enabled */
+
+	struct tcp_fastopen_context __rcu *ctx; /* cipher context for cookie */
+};
+```
+
+TODO table mapping kernel functions, to connection types, to queue add/del
+
 
