@@ -151,8 +151,8 @@ Recently I performed a small amount of [analysis on NGINX reverse proxy servers]
 |-----------|----------------------------------------------------------------------------|
 | Q         | Number of items in Linux accept queue.                                     |
 | A         | Number of active connections currently being processed by NGINX.           |
- | 1         | The GET request used to query the stub status module itself.               |
- | somaxconn | Arbitrary limit for accept queues either set by a user, or default to 1024 |
+| 1         | The GET request used to query the stub status module itself.               |
+| somaxconn | Arbitrary limit for accept queues either set by a user, or default to 1024 |
 
 ---
 
