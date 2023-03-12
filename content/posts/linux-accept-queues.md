@@ -1,8 +1,9 @@
 ---
-title: "Linux Accept Queues: managing latency in the network stack"
+title: "Observing and Understanding Accept Queues in Linux"
 date: 2023-03-10
 author: Kris Nóva
 description: Every Linux socket server is subject to inbound connection and request queueing at runtime. Learn how the kernel accept queue works, and how to observe it at runtime.
+math: true
 tags:
   - Linux
   - Kernel
@@ -144,7 +145,44 @@ NGINX uses [event based architecture](http://www.aosabook.org/en/nginx.html) and
 NGINX Reverse Proxy
 ===
 
-Recently I performed a small amount of [analysis on NGINX reverse proxy servers](https://github.com/krisnova/nginx-proxy-analysis#) which was able to demonstrate the behavior of NGINX given known dysfunctional upstream servers.
+Recently I performed a small amount of [analysis on NGINX reverse proxy servers](https://github.com/krisnova/nginx-proxy-analysis#) which was able to demonstrate the behavior of NGINX given known dysfunctional upstream servers in which I was able to calculate the "Active Connections" metric produced by the popular [stub status module](https://nginx.org/en/docs/http/ngx_http_stub_status_module.html) as:
+
+| Field     | Description                                                                |
+|-----------|----------------------------------------------------------------------------|
+| Q         | Number of items in Linux accept queue.                                     |
+| A         | Number of active connections currently being processed by NGINX.           |
+ | 1         | The GET request used to query the stub status module itself.               |
+ | somaxconn | Arbitrary limit for accept queues either set by a user, or default to 1024 |
+
+```goat 
+                   ┌───────────────────────────┐
+        ┌──────────┤ Backlog Queue ≤ somaxconn │ ◄────────────────────┐
+        │          └───────────────────────────┘                      │
+        │                       Q                                     │ 
+        │                                                             │
+        ▼           ┌────────────────────────┐              ┌─────────┴──────────┐
+                    │                        │              │ Active Connections │
+    listen(); ────► │  Nginx Master Process  │              └─────────┬──────────┘
+                    │                        │                        │
+                    └─┬──────────────────────┘                        │
+                      │                                               │
+                      │   ┌────────────────────────┐                  │
+                      │   │                        │                  │
+    accept(); ────►   ├──►│ Nginx Worker Thread 1  │  ◄────────┐      │
+                      │   │                        │           │      ▼
+                      │   └────────────────────────┘    ┌──────┴─────────────┐
+                      │                                 │Accepted Connections│
+                      │   ┌────────────────────────┐    └──────┬─────────────┘
+                      │   │                        │           │     A
+    accept(); ─────►  └──►│ Nginx Worker Thread 2  │  ◄────────┘
+                          │                        │
+                          └────────────────────────┘
+```
+
+$$
+Active Connections = \sum_{Q + A + 1}
+$$
+
 
 There were 2 key takeaways from my work that are relevant in this discussion. Specifically on how NGINX is able to set an upper limit on the kernel accept queues described above.
 
@@ -153,7 +191,7 @@ There were 2 key takeaways from my work that are relevant in this discussion. Sp
 
 It is important to note that even despite raising the upper limit of the accept queue using [sysctl(8)](https://linux.die.net/man/8/sysctl), the [NGINX worker_connections](http://nginx.org/en/docs/ngx_core_module.html#worker_connections) directive can still impose an upper limit on connections to the server at large even if there is plenty of available room in the accept queue buffers.
 
-Regardless of which limit was exceeded, I was able to demonstrate NGINX returning 5XX level HTTP responses simply by setting the various limits low enough and send a small amount of traffic to the server fast enough to exceed the limits.
+Regardless of which limit (accept queue, backlog queue, or worker connections) was exceeded, I was able to demonstrate NGINX returning 5XX level HTTP responses simply by setting the various limits low enough and exceeding the limits with curl requests in a simple bash loop.
 
 Performance
 ===
@@ -170,8 +208,11 @@ Saturation is the point in which you have received more load than your current s
 
 ### Observing Accept Queues 
 
+Now -- the question remains how does one observe the state of these queues? More importantly: when would you want to?
 
+In order to observe the queues you will first want to understand which specific accept queues you believe to be interesting on your servers.
+There are many instances of the [request_sock_queue](https://github.com/torvalds/linux/blob/v6.2/include/net/request_sock.h#L168-L188) specifically found primarily in the net core and net TCP sections of the network code in Linux.
 
-
-
+TODO BCC is the easiest with kprobe
+TODO Also sysdig?
 
