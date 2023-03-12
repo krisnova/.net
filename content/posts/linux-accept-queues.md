@@ -260,6 +260,12 @@ struct fastopen_queue {
 };
 ```
 
+#### IPv4 Instrumentation Points
+
+ - Listen start: int inet_csk_listen_start(struct sock *sk) /net/ipv4/inet_connection_sock.c
+ - Connection received: tcp_conn_request(...) /net/ipv4/tcp_input.c
+ - Accept connection: struct sock *inet_csk_accept(struct sock *sk, int flags, int *err, bool kern) /net/ipv4/inet_connection_sock.c
+
 TODO table mapping kernel functions, to connection types, to queue add/del
 
 
