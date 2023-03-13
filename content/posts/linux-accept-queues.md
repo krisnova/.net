@@ -239,10 +239,10 @@ Recently I performed a small amount of [analysis on NGINX reverse proxy servers]
 Note that NGINX operates with a monolithic `listen()` statement in the master process, and that `accept()` events are operated on by worker threads as events are produced within NGINX. 
 
 ```goat 
-                   ┌───────────────────────────┐
-        ┌──────────┤ Backlog Queue ≤ somaxconn │ ◄────────────────────┐
-        │          └───────────────────────────┘                      │
-        │                       Q                                     │ 
+                    ┌──────────────────────────┐
+        ┌───────────┤ Accept Queue ≤ somaxconn │ ◄────────────────────┐
+        │           └──────────────────────────┘                      │
+        │                         Q                                   │
         │                                                             │
         ▼           ┌────────────────────────┐              ┌─────────┴──────────┐
                     │                        │              │ Active Connections │
