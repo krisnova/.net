@@ -260,7 +260,7 @@ State  Recv-Q Send-Q      Local Address:Port  Peer Address:PortProcess
 LISTEN 17      4096              0.0.0.0:80         0.0.0.0:*
 ```
 
-I wrote a working example of an eBPF kprobe implementation in Rust as I intend on adding more advanced metrics in the future that shows the detail and some more of my research in a project called [q](https://github.com/krisnova/q).
+I wrote a [working example of an eBPF kprobe implementation in Rust](https://github.com/krisnova/q) as I intend on adding more advanced metrics in the future that shows the detail and some more of my research in a project called [q](https://github.com/krisnova/q).
 The q project contains a directory `/servers` which houses a set of dysfunctional servers written in C that can be used to simulate the metrics.
 
 Regardless of where you are surfacing the data, there will be trade-offs and limitations to what specific metrics you are interested in.
