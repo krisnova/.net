@@ -260,6 +260,17 @@ struct fastopen_queue {
 };
 ```
 
+It is important to note that TFO (TCP Fast Open) is likely disabled by default on most TCP servers. You can check the current value, or echo an integer to the file to set a value.
+
+```bash
+# 0 TFO Disabled
+# 1 TFO Outbound Only      (Client)
+# 2 TFO Inbound  Only      (Server)
+# 3 TFO Inbound/Outbound   (Client/Server)
+cat /proc/sys/net/ipv4/tcp_fastopen
+echo 1 > /proc/sys/net/ipv4/tcp_fastopen
+```
+
 #### IPv4 Instrumentation Points
 
  - Listen start: int inet_csk_listen_start(struct sock *sk) /net/ipv4/inet_connection_sock.c
