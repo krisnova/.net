@@ -268,7 +268,7 @@ The kernel networking stack isn't as complicated as you might think as soon as y
 
 A quick brush up on the relationship between Linux system calls and the [TCP handshake](https://www.rfc-editor.org/rfc/rfc793) makes quick work of understanding the relationship between `listen()` and `accept()`.
 
-TCP is a stateful protocol, and the connections must exist **somewhere** while we wait for an `SYN,ACK`.
+TCP is a stateful protocol, and the connections must exist **somewhere** while we wait for `SYN,ACK` from the server.
 
 In our case, this place is the Linux backlog queue which can be a pain to learn about the hard way in the event your servers are no longer accepting new connections.
 
