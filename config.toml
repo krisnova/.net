@@ -33,7 +33,7 @@ theme = "hugo-blog-awesome"
 [params]
   sitename = "Kris Nóva"
   defaultColor = "dark"
-  description = "Minimal Hugo blog theme with light and dark mode support"
+  description = "Complete technical works of software engineer Kris Nóva. Verified with Hachyderm. Compute runtime, Linux, Aurae, Kubernetes, Security, and Kernel topics. Distributed systems. Cyber Security. Analysis. Math."
 
 [params.author]
   avatar = "img/nova.jpg"
