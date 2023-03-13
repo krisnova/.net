@@ -246,7 +246,7 @@ In other words, the only way to surfacing the values out of the kernel with kpro
 
 Tools such as [Python BCC](https://android.googlesource.com/platform/external/bcc/+/refs/heads/android10-c2f2-s1-release/docs/tutorial_bcc_python_developer.md) make this exercise fairly trivial.
 
-```pyhton 
+```python
 from bcc import BPF
 BPF(text='int kprobe__tcp_conn_request(struct request_sock_ops *rsk_ops, const struct tcp_request_sock_ops *af_ops, struct sock *sk, struct sk_buff *skb) { bpf_trace_printk("qlen: *sock.sk_ack_backlog"); return 0; }').trace_print()
 ```
