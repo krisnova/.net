@@ -3,6 +3,8 @@ baseURL = 'https://krisnova.net/'
 languageCode = 'en-us'
 theme = "hugo-blog-awesome"
 
+[outputs]
+  home = [ "HTML", "RSS" ] # Generate RSS
 
 # set markup.highlight.noClasses=false to enable code highlight
 [markup]
