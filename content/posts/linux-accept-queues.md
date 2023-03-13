@@ -328,4 +328,10 @@ September 1981
                                Figure 6.
 ```
 
+#### More Resources 
+
+- [TCP SYN Queue and Accept Queue Overflow Explained
+  ](https://www.alibabacloud.com/blog/tcp-syn-queue-and-accept-queue-overflow-explained_599203)
+- [TCP Fast Open TFO](https://www.rfc-editor.org/rfc/rfc7413)
+
 
