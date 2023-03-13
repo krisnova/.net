@@ -264,9 +264,10 @@ I wrote a [working example of an eBPF kprobe implementation in Rust](https://git
 The q project contains a directory `/servers` which houses a set of dysfunctional servers written in C that can be used to simulate the metrics.
 
 Regardless of where you are surfacing the data, there will be trade-offs and limitations to what specific metrics you are interested in.
-The kernel networking stack isn't as complicated as you might think one you are sufficiently above the lower level Net Device layers of the kernel.
+The kernel networking stack isn't as complicated as you might think as soon as you are sufficiently above net device (tcpdump, wireshark, network devices, etc).
 
 A quick brush up on the relationship between Linux system calls and the [TCP handshake](https://www.rfc-editor.org/rfc/rfc793) makes quick work of understanding the relationship between `listen()` and `accept()`.
+
 TCP is a stateful protocol, and the connections must exist **somewhere** while we wait for an `SYN,ACK`.
 
 In our case, this place is the Linux backlog queue which can be a pain to learn about the hard way in the event your servers are no longer accepting new connections.
