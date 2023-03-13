@@ -1,8 +1,8 @@
 ---
-title: "Observing and Understanding Backlog Queues in Linux"
+title: "Observing and Understanding Accept Queues in Linux"
 date: 2023-03-10
 author: Kris Nóva
-description: Every Linux socket server is subject to inbound connection and request queueing at runtime. Learn how the kernel backlog queue works, and how to observe it at runtime.
+description: Every Linux socket server is subject to inbound connection and request queueing at runtime. Learn how the kernel accept queue works, and how to observe it at runtime.
 math: true
 tags:
   - Linux
@@ -45,35 +45,114 @@ In Linux, this type of abstract modeling is not only just a good idea, it reflec
 The Linux kernel is composed of thousands of interdependent code paths that are capable of producing millions of events per second.
 These code paths heavily leverage queue and stack mechanics in order to keep the kernel operating smoothly.
 
-```c 
-// include/net/request_sock.h v6.2
+```c
+// include/net/inet_connection_sock.h v6.2
 
-/** struct request_sock_queue - queue of request_socks
+/** inet_connection_sock - INET connection oriented sock
  *
- * @rskq_accept_head - FIFO head of established children
- * @rskq_accept_tail - FIFO tail of established children
- * @rskq_defer_accept - User waits for some data after accept()
- *
+ * @icsk_accept_queue:	   FIFO of established children
+ * @icsk_bind_hash:	   Bind node
+ * @icsk_bind2_hash:	   Bind node in the bhash2 table
+ * @icsk_timeout:	   Timeout
+ * @icsk_retransmit_timer: Resend (no ack)
+ * @icsk_rto:		   Retransmit timeout
+ * @icsk_pmtu_cookie	   Last pmtu seen by socket
+ * @icsk_ca_ops		   Pluggable congestion control hook
+ * @icsk_af_ops		   Operations which are AF_INET{4,6} specific
+ * @icsk_ulp_ops	   Pluggable ULP control hook
+ * @icsk_ulp_data	   ULP private data
+ * @icsk_clean_acked	   Clean acked data hook
+ * @icsk_ca_state:	   Congestion control state
+ * @icsk_retransmits:	   Number of unrecovered [RTO] timeouts
+ * @icsk_pending:	   Scheduled timer event
+ * @icsk_backoff:	   Backoff
+ * @icsk_syn_retries:      Number of allowed SYN (or equivalent) retries
+ * @icsk_probes_out:	   unanswered 0 window probes
+ * @icsk_ext_hdr_len:	   Network protocol overhead (IP/IPv6 options)
+ * @icsk_ack:		   Delayed ACK control data
+ * @icsk_mtup;		   MTU probing control data
+ * @icsk_probes_tstamp:    Probe timestamp (cleared by non-zero window ack)
+ * @icsk_user_timeout:	   TCP_USER_TIMEOUT value
  */
-struct request_sock_queue {
-	spinlock_t		rskq_lock;
-	u8			rskq_defer_accept;
+struct inet_connection_sock {
+	/* inet_sock has to be the first member! */
+	struct inet_sock	  icsk_inet;
+	struct request_sock_queue icsk_accept_queue;
+	struct inet_bind_bucket	  *icsk_bind_hash;
+	struct inet_bind2_bucket  *icsk_bind2_hash;
+	unsigned long		  icsk_timeout;
+ 	struct timer_list	  icsk_retransmit_timer;
+ 	struct timer_list	  icsk_delack_timer;
+	__u32			  icsk_rto;
+	__u32                     icsk_rto_min;
+	__u32                     icsk_delack_max;
+	__u32			  icsk_pmtu_cookie;
+	const struct tcp_congestion_ops *icsk_ca_ops;
+	const struct inet_connection_sock_af_ops *icsk_af_ops;
+	const struct tcp_ulp_ops  *icsk_ulp_ops;
+	void __rcu		  *icsk_ulp_data;
+	void (*icsk_clean_acked)(struct sock *sk, u32 acked_seq);
+	unsigned int		  (*icsk_sync_mss)(struct sock *sk, u32 pmtu);
+	__u8			  icsk_ca_state:5,
+				  icsk_ca_initialized:1,
+				  icsk_ca_setsockopt:1,
+				  icsk_ca_dst_locked:1;
+	__u8			  icsk_retransmits;
+	__u8			  icsk_pending;
+	__u8			  icsk_backoff;
+	__u8			  icsk_syn_retries;
+	__u8			  icsk_probes_out;
+	__u16			  icsk_ext_hdr_len;
+	struct {
+		__u8		  pending;	 /* ACK is pending			   */
+		__u8		  quick;	 /* Scheduled number of quick acks	   */
+		__u8		  pingpong;	 /* The session is interactive		   */
+		__u8		  retry;	 /* Number of attempts			   */
+		__u32		  ato;		 /* Predicted tick of soft clock	   */
+		unsigned long	  timeout;	 /* Currently scheduled timeout		   */
+		__u32		  lrcvtime;	 /* timestamp of last received data packet */
+		__u16		  last_seg_size; /* Size of last incoming segment	   */
+		__u16		  rcv_mss;	 /* MSS used for delayed ACK decisions	   */
+	}icsk_ack; //...
+}
+```
 
-	u32			synflood_warned;
-	atomic_t		qlen;
-	atomic_t		young;
+In Linux, all inbound network requests from an arbitrary client will pass through the kernel backlog queue which is an instance of a [request_sock_queue](https://github.com/torvalds/linux/blob/v6.2/include/net/request_sock.h#L168-L188) struct and part of the normal TCP handshake.
+This is true for any socket server (TCP/IPv4, TCP/IPv6, Unix domain, UDP/connectionless) built using the Linux network stack or the `/include/net` directory in the source tree.
 
-	struct request_sock	*rskq_accept_head;
-	struct request_sock	*rskq_accept_tail;
-	struct fastopen_queue	fastopenq;
+Additionally, there is a more mature and much more exciting structure which is assembled after the TCP handshake is complete which is the complete socket structure.
+
+```C 
+ // include/linux/net.h v6.2
+
+/**
+ *  struct socket - general BSD socket
+ *  @state: socket state (%SS_CONNECTED, etc)
+ *  @type: socket type (%SOCK_STREAM, etc)
+ *  @flags: socket flags (%SOCK_NOSPACE, etc)
+ *  @ops: protocol specific socket operations
+ *  @file: File back pointer for gc
+ *  @sk: internal networking protocol agnostic socket representation
+ *  @wq: wait queue for several uses
+ */
+struct socket {
+	socket_state		state;
+
+	short			type;
+
+	unsigned long		flags;
+
+	struct file		*file;
+	struct sock		*sk;
+	const struct proto_ops	*ops;
+
+	struct socket_wq	wq;
 };
 ```
 
-In Linux, all inbound network requests from an arbitrary client will pass through the kernel backlog queue also known as the "accept queue", which is an instance of a [request_sock_queue](https://github.com/torvalds/linux/blob/v6.2/include/net/request_sock.h#L168-L188) struct.
-This is true for any socket server (TCP/IPv4, TCP/IPv6, Unix domain, UDP/connectionless) built using the Linux network stack or the `/include/net` directory in the source tree.
-In fact there are several queue implementations that make up the TCP handshake and server connections alone!
+Herein lies "The Accept Queue" which can be observed after a request has completed the TCP handshake and exited the "backlog" or "SYN queue".
 
-Inbound requests may accumulate at runtime which exist in between the moment a server has received the connection from the network stack, and the moment a worker has called `accept()` to pop the connection pointer off the stack. 
+Inbound requests may accumulate at runtime which exist in between the moment a server has completed the TCP handshake, and the moment a worker has called `accept()` to pop the connection pointer off the stack.
 
 As these requests begin to queue, problems arise such as slow user experience or wasted compute resources due to saturated services.
 
@@ -334,5 +413,6 @@ September 1981
 - [TCP SYN Queue and Accept Queue Overflow Explained
   ](https://www.alibabacloud.com/blog/tcp-syn-queue-and-accept-queue-overflow-explained_599203)
 - [TCP Fast Open TFO](https://www.rfc-editor.org/rfc/rfc7413)
-
-
+- [A tale of two queues](http://arthurchiao.art/blog/tcp-listen-a-tale-of-two-queues/)
+- [How TCP backlog works in Linux](http://veithen.io/2014/01/01/how-tcp-backlog-works-in-linux.html)
+- [TCP SYN queue and accept queue explained](https://www.alibabacloud.com/blog/tcp-syn-queue-and-accept-queue-overflow-explained_599203)
