@@ -1,8 +1,8 @@
 ---
-title: "Observing and Understanding Accept Queues in Linux"
+title: "Observing and Understanding Backlog Queues in Linux"
 date: 2023-03-10
 author: Kris Nóva
-description: Every Linux socket server is subject to inbound connection and request queueing at runtime. Learn how the kernel accept queue works, and how to observe it at runtime.
+description: Every Linux socket server is subject to inbound connection and request queueing at runtime. Learn how the kernel backlog queue works, and how to observe it at runtime.
 math: true
 tags:
   - Linux
@@ -69,8 +69,9 @@ struct request_sock_queue {
 };
 ```
 
-In Linux, all inbound network requests from an arbitrary client will pass through the kernel accept queue, which is an instance of a [request_sock_queue](https://github.com/torvalds/linux/blob/v6.2/include/net/request_sock.h#L168-L188) struct.
+In Linux, all inbound network requests from an arbitrary client will pass through the kernel backlog queue also known as the "accept queue", which is an instance of a [request_sock_queue](https://github.com/torvalds/linux/blob/v6.2/include/net/request_sock.h#L168-L188) struct.
 This is true for any socket server (TCP/IPv4, TCP/IPv6, Unix domain, UDP/connectionless) built using the Linux network stack or the `/include/net` directory in the source tree.
+In fact there are several queue implementations that make up the TCP handshake and server connections alone!
 
 Inbound requests may accumulate at runtime which exist in between the moment a server has received the connection from the network stack, and the moment a worker has called `accept()` to pop the connection pointer off the stack. 
 
@@ -190,8 +191,8 @@ $$
 
 There were 2 key takeaways from my work that are relevant in this discussion. Specifically on how NGINX is able to set an upper limit on the kernel accept queues described above.
 
- 1. NGINX manages an internal accept queue limit known as "The Backlog Queue" which the implementation can be seen in [/src/core/ngx_connection.c](https://github.com/nginx/nginx/blob/master/src/core/ngx_connection.c) and defaults to 511 + 1 on Linux. Also see [Tuning NGINX](https://www.nginx.com/blog/tuning-nginx/).
- 2. The backlog queue can be set to an arbitrary values by modifying kernel parameters using sysctl(8); `net.core.somaxconn` and `net.core.netdev_max_backlog`.
+ 1. NGINX manages an internal accept queue limit known also known as "the backlog queue" which the implementation can be seen in [/src/core/ngx_connection.c](https://github.com/nginx/nginx/blob/master/src/core/ngx_connection.c) and defaults to 511 + 1 on Linux. Also see [Tuning NGINX](https://www.nginx.com/blog/tuning-nginx/).
+ 2. The NGINX backlog queue can be set to an arbitrary values by modifying kernel parameters using sysctl(8); `net.core.somaxconn` and `net.core.netdev_max_backlog`.
 
 It is important to note that even despite raising the upper limit of the accept queue using [sysctl(8)](https://linux.die.net/man/8/sysctl), the [NGINX worker_connections](http://nginx.org/en/docs/ngx_core_module.html#worker_connections) directive can still impose an upper limit on connections to the server at large even if there is plenty of available room in the accept queue buffers.
 
@@ -215,7 +216,6 @@ Saturation is the point in which you have received more load than your current s
 Now -- the question remains how does one observe the state of these queues? More importantly: when would you want to?
 
 In order to observe the queues you will first want to understand which specific accept queues you believe to be interesting on your servers.
-There are many instances of the [request_sock_queue](https://github.com/torvalds/linux/blob/v6.2/include/net/request_sock.h#L168-L188) specifically found primarily in the net core and net TCP sections of the network code in Linux.
 
 Specifically there are 4 types of connections that most enterprise services will find interesting:
 
@@ -224,59 +224,107 @@ Specifically there are 4 types of connections that most enterprise services will
  - Unix domain
  - UDP (connectionless)
 
-We are interested in observing the moment a connection is added to an accept queue, as well as the moment a connection is removed from an accept queue.
+In this example we are interested in observing the moment a TCP/IPV4 connection is appended to an accept queue, as well as the moment a connection is removed from an accept queue. 
+Demonstrating the queue accumulating connections behavior alone requires a special environment where a server is listening for connections, but will not accept the connections. 
+Then a simple client tool such a [curl](https://curl.se/) can be used to connect to the dysfunctional server.
 
-To do this we need to instrument the functions of the kernel where these events occur. Specifically we are interested in the `qlen` field in the `fastopen_queue` struct found in `include/net/request_sock.h`.
+To do this we need to instrument the functions of the kernel where specific events occur using Extended BPF [eBPF](https://docs.kernel.org/bpf/instruction-set.html) and a special utility known as [kprobes](https://docs.kernel.org/trace/kprobes.html).
 
-```c
-/*
- * For a TCP Fast Open listener -
- *	lock - protects the access to all the reqsk, which is co-owned by
- *		the listener and the child socket.
- *	qlen - pending TFO requests (still in TCP_SYN_RECV).
- *	max_qlen - max TFO reqs allowed before TFO is disabled.
- *
- *	XXX (TFO) - ideally these fields can be made as part of "listen_sock"
- *	structure above. But there is some implementation difficulty due to
- *	listen_sock being part of request_sock_queue hence will be freed when
- *	a listener is stopped. But TFO related fields may continue to be
- *	accessed even after a listener is closed, until its sk_refcnt drops
- *	to 0 implying no more outstanding TFO reqs. One solution is to keep
- *	listen_opt around until	sk_refcnt drops to 0. But there is some other
- *	complexity that needs to be resolved. E.g., a listener can be disabled
- *	temporarily through shutdown()->tcp_disconnect(), and re-enabled later.
- */
-struct fastopen_queue {
-	struct request_sock	*rskq_rst_head; /* Keep track of past TFO */
-	struct request_sock	*rskq_rst_tail; /* requests that caused RST.
-						 * This is part of the defense
-						 * against spoofing attack.
-						 */
-	spinlock_t	lock;
-	int		qlen;		/* # of pending (TCP_SYN_RECV) reqs */
-	int		max_qlen;	/* != 0 iff TFO is currently enabled */
+For TCP/IPv4 and TCP/IPv6 instrumentation on a 6.2 kernel here is what I use.
 
-	struct tcp_fastopen_context __rcu *ctx; /* cipher context for cookie */
-};
+| Kernel Function       | Source                                                                                                | Description | Specific Field                                | Layer |
+|-----------------------|-------------------------------------------------------------------------------------------------------|-------------|-----------------------------------------------|-------|
+| tcp_conn_request      | [inet_connection_sock.c](https://github.com/torvalds/linux/blob/v6.2/net/ipv4/inet_connection_sock.c) | queue++     | [*sock.sk_ack_backlog](inet_csk_listen_start) | 4/TCP |
+| inet_csk_accept       | [tcp_input.c](https://github.com/torvalds/linux/blob/v6.2/net/ipv4/tcp_input.c)                       | queue--     | [sock.sk_ack_backlog](inet_csk_listen_start)  | 3/IP  |
+| inet_csk_listen_start | [inet_connection_sock.c](https://github.com/torvalds/linux/blob/v6.2/net/ipv4/inet_connection_sock.c) | N/A         | Informative                                   | 3/IP  | 
+
+In my opinion it is important to measuring queues when an element is added, as well as removed from the queue.
+This ensures accurate reporting to the total lifecycle of a given accumulation period such that an element can not be added or removed silently.
+
+This methodology of measuring when an element is added, and removed is important because kprobes are executed inline with existing kernel functions.
+In other words, the only way to surfacing the values out of the kernel with kprobes is for something to actually exercise the code that adds and removes elements from the queue. 
+
+Tools such as [Python BCC](https://android.googlesource.com/platform/external/bcc/+/refs/heads/android10-c2f2-s1-release/docs/tutorial_bcc_python_developer.md) make this exercise fairly trivial.
+
+```pyhton 
+from bcc import BPF
+BPF(text='int kprobe__tcp_conn_request(struct request_sock_ops *rsk_ops, const struct tcp_request_sock_ops *af_ops, struct sock *sk, struct sk_buff *skb) { bpf_trace_printk("qlen: *sock.sk_ack_backlog"); return 0; }').trace_print()
 ```
 
-It is important to note that TFO (TCP Fast Open) is likely disabled by default on most TCP servers. You can check the current value, or echo an integer to the file to set a value.
+Additionally the [ss(8)](https://linux.die.net/man/8/ss) command makes extremely quick work of this exercise.
 
-```bash
-# 0 TFO Disabled
-# 1 TFO Outbound Only      (Client)
-# 2 TFO Inbound  Only      (Server)
-# 3 TFO Inbound/Outbound   (Client/Server)
-cat /proc/sys/net/ipv4/tcp_fastopen
-echo 1 > /proc/sys/net/ipv4/tcp_fastopen
+```bash 
+# ss -lnt
+State  Recv-Q Send-Q      Local Address:Port  Peer Address:PortProcess
+LISTEN 17      4096              0.0.0.0:80         0.0.0.0:*
 ```
 
-#### IPv4 Instrumentation Points
+I wrote a working example of an eBPF kprobe implementation in Rust as I intend on adding more advanced metrics in the future that shows the detail and some more of my research in a project called [q](https://github.com/krisnova/q).
+The q project contains a directory `/servers` which houses a set of dysfunctional servers written in C that can be used to simulate the metrics.
 
- - Listen start: int inet_csk_listen_start(struct sock *sk) /net/ipv4/inet_connection_sock.c
- - Connection received: tcp_conn_request(...) /net/ipv4/tcp_input.c
- - Accept connection: struct sock *inet_csk_accept(struct sock *sk, int flags, int *err, bool kern) /net/ipv4/inet_connection_sock.c
+Regardless of where you are surfacing the data, there will be trade-offs and limitations to what specific metrics you are interested in.
+The kernel networking stack isn't as complicated as you might think one you are sufficiently above the lower level Net Device layers of the kernel.
 
-TODO table mapping kernel functions, to connection types, to queue add/del
+A quick brush up on the relationship between Linux system calls and the [TCP handshake](https://www.rfc-editor.org/rfc/rfc793) makes quick work of understanding the relationship between `listen()` and `accept()`.
+TCP is a stateful protocol, and the connections must exist **somewhere** while we wait for an `SYN,ACK`.
+
+In our case, this place is the Linux backlog queue which can be a pain to learn about the hard way in the event your servers are no longer accepting new connections.
+
+```goat 
+September 1981
+                                           Transmission Control Protocol
+                                                Functional Specification
+
+
+
+
+                              +---------+ ---------\      active OPEN
+                              |  CLOSED |            \    -----------
+                              +---------+<---------\   \   create TCB
+                                |     ^              \   \  snd SYN
+                   passive OPEN |     |   CLOSE        \   \
+                   ------------ |     | ----------       \   \
+                    create TCB  |     | delete TCB         \   \
+                                V     |                      \   \
+                              +---------+            CLOSE    |    \
+                              |  LISTEN |          ---------- |     |
+                              +---------+          delete TCB |     |
+                   rcv SYN      |     |     SEND              |     |
+                  -----------   |     |    -------            |     V
+ +---------+      snd SYN,ACK  /       \   snd SYN          +---------+
+ |         |<-----------------           ------------------>|         |
+ |   SYN   |                    rcv SYN                     |   SYN   |
+ |   RCVD  |<-----------------------------------------------|   SENT  |
+ |         |                    snd ACK                     |         |
+ |         |------------------           -------------------|         |
+ +---------+   rcv ACK of SYN  \       /  rcv SYN,ACK       +---------+
+   |           --------------   |     |   -----------
+   |                  x         |     |     snd ACK
+   |                            V     V
+   |  CLOSE                   +---------+
+   | -------                  |  ESTAB  |
+   | snd FIN                  +---------+
+   |                   CLOSE    |     |    rcv FIN
+   V                  -------   |     |    -------
+ +---------+          snd FIN  /       \   snd ACK          +---------+
+ |  FIN    |<-----------------           ------------------>|  CLOSE  |
+ | WAIT-1  |------------------                              |   WAIT  |
+ +---------+          rcv FIN  \                            +---------+
+   | rcv ACK of FIN   -------   |                            CLOSE  |
+   | --------------   snd ACK   |                           ------- |
+   V        x                   V                           snd FIN V
+ +---------+                  +---------+                   +---------+
+ |FINWAIT-2|                  | CLOSING |                   | LAST-ACK|
+ +---------+                  +---------+                   +---------+
+   |                rcv ACK of FIN |                 rcv ACK of FIN |
+   |  rcv FIN       -------------- |    Timeout=2MSL -------------- |
+   |  -------              x       V    ------------        x       V
+    \ snd ACK                 +---------+delete TCB         +---------+
+     ------------------------>|TIME WAIT|------------------>| CLOSED  |
+                              +---------+                   +---------+
+
+                      TCP Connection State Diagram
+                               Figure 6.
+```
 
 
