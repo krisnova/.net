@@ -160,7 +160,7 @@ The kernel accept queue is a trivial FIFO queue implementation, with some nuance
 
 If the network stack receives requests at a faster rate than the workers can process the requests, the accept queue grows.
 
-In the follow model, a worker is any arbitrary service that communicates with the networking stack using [accept(2)](https://linux.die.net/man/2/accept4) which can be used after a service has called [listen(3)](https://linux.die.net/man/3/listen) to begin accepting inbound connections. 
+In the following model, a worker is any arbitrary service that communicates with the networking stack using [accept(2)](https://linux.die.net/man/2/accept4) which can be used after a service has called [listen(3)](https://linux.die.net/man/3/listen) to begin accepting inbound connections. 
 
 ```goat 
                                ┌──────────┐  ┌──────────┐
