@@ -2,6 +2,9 @@
   {{ partial "meta/main.html" . }}
   {{ hugo.Generator }}
 
+  <!--  Momently Integration -->
+  <script src="//s3-us-west-2.amazonaws.com/momently-static/loader/irjZ2AAdASw_momently.js" name="momently-script"></script>
+
   <!-- Permalink & RSSlink -->
   <link rel="canonical" href="{{ .Permalink }}">
   {{- with .OutputFormats.Get "RSS" }}
