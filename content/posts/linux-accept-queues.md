@@ -1,6 +1,6 @@
 ---
 title: "Observing and Understanding Accept Queues in Linux"
-date: 2023-03-10
+date: 2023-03-13
 author: Kris Nóva
 description: Every Linux socket server is subject to inbound connection and request queueing at runtime. Learn how the kernel accept queue works, and how to observe it at runtime.
 math: true
