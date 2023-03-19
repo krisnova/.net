@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>eBPF on Kris Nóva</title>
+    <link>https://krisnova.net/tags/ebpf/</link>
+    <description>Recent content in eBPF on Kris Nóva</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 10 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://krisnova.net/tags/ebpf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Observing and Understanding Accept Queues in Linux</title>
+      <link>https://krisnova.net/posts/linux-accept-queues/</link>
+      <pubDate>Fri, 10 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://krisnova.net/posts/linux-accept-queues/</guid>
+      <description>All complex systems can, and in my opinion should, be modelled and reasoned about as a collection of queues, caches, connections, and workers. In Linux, this type of abstract modeling is not only just a good idea, it reflects quite literally how the kernel is built.
+R e q u e s t ┌ │ │ │ │ s ─ ─ q ► u e I u n ┌ │ │ │ └ e b ─ ─ o │ │ │ │ │ ▼ ─ ─ h u ─ F ─ e n ─ I ─ r d │ │ │ │ │ ▼ ─ F ─ e ─ O ─ C ─ ─ o │ │ │ │ │ ▼ ─ ─ n ─ Q ─ n ─ u ─ e │ │ │ │ │ ▼ ─ e ─ c ─ u ─ t ─ e ─ i │ │ │ │ │ ▼ ─ ┬ │ ├ │ │ │ └ o ─ ─ ─ ─ n ┐ │ ├ │ ┘ ─ ─ s ─ ─ ─ ─ ─ ─ ┌ │ └ ► ► ► ─ ─ ─ l ┬ │ │ ├ │ │ │ ├ │ │ │ └ ─ i ─ ─ ─ ─ ─ s ─ ─ ─ ─ ─ t ─ ─ ─ ─ ─ e ─ ─ ─ ─ ─ n ─ ─ ─ ─ ─ ( ─ ► ► ► ─ ) ─ ┌ │ └ ┌ │ └ ┌ │ └ ─ ─ ─ ─ ─ ─ ─ ─ ┐ │ ┘ ─ a ─ ─ a ─ ─ a ─ ─ c ─ ─ c ─ ─ c ─ ─ c ─ ─ c ─ ─ c ─ ─ e ─ ─ e ─ ─ e ─ ─ p ─ ─ p ─ ─ p ─ ─ t ─ ─ t ─ ─ t ─ ─ ( ─ ─ ( ─ ─ ( ─ ─ ) ─ ─ ) ─ ─ ) ─ ─ ─ ─ ─ ─ ─ ┐ │ ┘ ┐ │ ┘ ┐ │ ┘ S m W s c o s e o o u h n e t r r b a r e k j n d v o e e g e i f w r c e s c o t i e 1 r s b g .</description>
+    </item>
+    
+  </channel>
+</rss>

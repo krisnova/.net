@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Kris Nóva</title>
+    <link>https://krisnova.net/tags/</link>
+    <description>Recent content in Tags on Kris Nóva</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 10 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://krisnova.net/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>eBPF</title>
+      <link>https://krisnova.net/tags/ebpf/</link>
+      <pubDate>Fri, 10 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://krisnova.net/tags/ebpf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kernel</title>
+      <link>https://krisnova.net/tags/kernel/</link>
+      <pubDate>Fri, 10 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://krisnova.net/tags/kernel/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Linux</title>
+      <link>https://krisnova.net/tags/linux/</link>
+      <pubDate>Fri, 10 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://krisnova.net/tags/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Observability</title>
+      <link>https://krisnova.net/tags/observability/</link>
+      <pubDate>Fri, 10 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://krisnova.net/tags/observability/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Queueing theory</title>
+      <link>https://krisnova.net/tags/queueing-theory/</link>
+      <pubDate>Fri, 10 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://krisnova.net/tags/queueing-theory/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Queues</title>
+      <link>https://krisnova.net/tags/queues/</link>
+      <pubDate>Fri, 10 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://krisnova.net/tags/queues/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TCP</title>
+      <link>https://krisnova.net/tags/tcp/</link>
+      <pubDate>Fri, 10 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://krisnova.net/tags/tcp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Unix domain sockets</title>
+      <link>https://krisnova.net/tags/unix-domain-sockets/</link>
+      <pubDate>Fri, 10 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://krisnova.net/tags/unix-domain-sockets/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
