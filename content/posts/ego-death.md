@@ -35,11 +35,18 @@ Social media seems to have a way of pushing dialogue to extremes.
 I remember feeling compelled to send stronger and more righteous signals into the abyss.
 I remember feeling the need to out-perform my previous display of extreme morality.
 I remember feeling that I must prove to the world, to the nameless and faceless audience, that my opinion was virtuous.
+
+Everyone was watching.
+
 There was no time to lose.
-I must deliver NOW!
+
+I must deliver.
+
 Time -- is of the essence.
+
 Regardless of how delightful, jarring, shocking, or aggressively virtuous my content was, internally I remained empty.
 
+Every perfect post was equally as rotten.
 
 Virtue signaling. Aggressive. Virtue signaling.
 And for who? Who was I trying to convince?
