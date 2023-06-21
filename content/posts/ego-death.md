@@ -21,7 +21,10 @@ First, My relationship with social media was "selfish", "self-centered", and "se
 Next, I believe I am not alone in this experience. 
 
 Candidly, I don't see a lot of hope on social media.
-I see mass demand of attention. Serotonin farming. Attention farming.
+The world doesn't seem to be using it to organize itself for the better.
+In fact, many of the virtue campaigns that served as a point of hope for me, have turned.
+
+I can't help but see a mass demand of attention. Serotonin farming. Accolade farming.
 Each cry out for external validation slightly more desperate than the last.
 
 I deeply believe everyone is virtuous, as they define it.
