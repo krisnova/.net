@@ -54,12 +54,20 @@ Slipping further and further into the delusion that somehow external acceptance 
 
 The ego.
 
-Social media grows the ego.
+Social media aggravates the ego.
 
 I am attempting to kill mine, or at least substantially weaken it. 
 
-Over the past months I have began mountain climbing again, and in many cases I have rediscovered a sense of self-respect for my ability to do things when nobody is watching.
-This confidence has stuck with me, and has soothed the black void inside me that had developed from my online addiction.
+As with an trauma, there is an inverse response to counter traumatic damage.
+You "over index". 
+You "over rotate".
+My experience has shown me that the only thing to gain from looking to social media for validation is an extremely aggravated ego starving for true acceptance.
+The more I turned to social media to measure myself, the more it stole myself from me.
+
+My ego had turned.
+
+Over the past months I have began mountain climbing again, and in many cases I have rediscovered a sense of self-respect for my ability to accomplish my goals when nobody is watching.
+This confidence has stuck with me, and has soothed the black ego void inside me that had developed from my online addiction.
 
 I will continue to send updates on my blog, and I intend on adding more content on my alpine climbing.
 I will continue to stream on Twitch, and work on my technical projects.
