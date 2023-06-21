@@ -112,7 +112,7 @@ Social media aggravates the ego.
 
 I want to kill my ego, or at least substantially break it.
 
-As with an trauma, there is an inverse response to counter traumatic damage.
+As with any trauma, there is an inverse response to counter traumatic damage.
 You "over index". 
 You "over rotate".
 My experience has shown me that the only thing to gain from looking to social media for validation is an extremely aggravated ego starving for true acceptance.
