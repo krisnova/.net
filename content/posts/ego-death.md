@@ -24,7 +24,7 @@ Candidly, I don't see a lot of hope on social media right now.
 I believe social media has drifted to a doom and horror conduit similar to the tabloids.
 Shock sites, devoid of hope.
 The more repulsive, the better.
-Akin to "Curiosity Slowing" of traffic driving past a gruesome accident. 
+Akin to "Curiosity Slowing" of traffic passing a gruesome accident. 
 Everyone wants to slow to gawk at the carnage -- nobody wants to stop and lend a hand.
 
 There is no argument that horrific things are occuring in the world. 
