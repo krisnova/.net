@@ -35,13 +35,13 @@ We are using it to farm a false sense of worth, and to cast stones at anyone who
 
 This observation shakes me to my core.
 
-My experience lead me to see a mass demand of attention. Serotonin farming. Accolade farming.
-Each cry out for external validation slightly more desperate than the last.
+My experience lead me to see a mass demand of attention. Serotonin farming. Accolade farming. Even fear and rage farming.
+Each cry out for the external slightly more desperate than the last.
 Each growing progressively more extreme than the last.
 We are approaching the edge cases of what our psyche can handle.
 
 I deeply believe everyone is virtuous, as they personally define it.
-For the most part, I believe the world's virtuous are common.
+For the most part, I believe the world's virtues are common.
 We all want peace, joy, safety, and comfort. We all want to smile.
 
 Social media seems to have a way of pushing dialogue to extremes and surfacing the edge cases.
