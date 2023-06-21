@@ -82,6 +82,12 @@ Virtue signaling. Aggressive. Virtue signaling.
 And for who? Who was I trying to convince?
 Who was anyone trying to convince?
 We were all here for ourselves and our own selfish reasons.
+Nobody is realistically looking to social media for change. 
+Nobody is reading our posts.
+
+There is no audience.
+
+We are a collective of depressed authors trying to persuade other equally hopeless authors of our integrity.
 
 How can anyone farming a void on emptiness internally enact change?
 No wonder hopelessness was creeping in.
