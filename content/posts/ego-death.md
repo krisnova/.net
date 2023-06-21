@@ -20,21 +20,36 @@ First, My relationship with social media was "selfish", "self-centered", and "se
 
 Next, I believe I am not alone in this experience. 
 
-Candidly, I don't see a lot of hope on social media.
-The world doesn't seem to be using it to organize itself for the better.
-In fact, many of the virtue campaigns that served as a point of hope for me, have turned.
+Candidly, I don't see a lot of hope on social media right now.
+I believe social media has drifted to a doom and horror conduit similar to the tabloids.
+Shock sites, devoid of hope.
+The more repulsive, the better.
+Akin to "Curiosity Slowing" of traffic driving past a gruesome accident. 
+Everyone wants to slow to gawk at the carnage -- nobody wants to stop and lend a hand.
 
-I can't help but see a mass demand of attention. Serotonin farming. Accolade farming.
+There is no argument that horrific things are occuring in the world. 
+However a mass separation from hope feels new.
+We have lost our prerogative to enact change.
+We aren't using social media to drive action.
+We are using it to farm a false sense of worth, and to cast stones at anyone who foolishly stumbles into a virtue-trap.
+
+This observation shakes me to my core.
+
+My experience lead me to see a mass demand of attention. Serotonin farming. Accolade farming.
 Each cry out for external validation slightly more desperate than the last.
+Each growing progressively more extreme than the last.
+We are approaching the edge cases of what our psyche can handle.
 
-I deeply believe everyone is virtuous, as they define it.
-In most cases, I deeply believe the majority of the world's virtuous are common.
+I deeply believe everyone is virtuous, as they personally define it.
+For the most part, I believe the world's virtuous are common.
 We all want peace, joy, safety, and comfort. We all want to smile.
 
-Social media seems to have a way of pushing dialogue to extremes.
+Social media seems to have a way of pushing dialogue to extremes and surfacing the edge cases.
 I remember feeling compelled to send stronger and more righteous signals into the abyss.
 I remember feeling the need to out-perform my previous display of extreme morality.
 I remember feeling that I must prove to the world, to the nameless and faceless audience, that my opinion was virtuous.
+I remember feeling time is of the essence and a great sense of urgency.
+I remember feeling a great sense of duty -- that I -- and I alone -- held the keys to unlock the next movement.
 
 Everyone was watching.
 
@@ -42,31 +57,50 @@ There was no time to lose.
 
 I must deliver.
 
-Time -- is of the essence.
+I must perform.
 
-Regardless of how delightful, jarring, shocking, or aggressively virtuous my content was, internally I remained empty.
+This. 
 
-Every perfect post was equally as rotten.
+This feeling.
+
+This moment.
+
+This -- is egotistical.
+
+### Internal Void
+
+Regardless of how delightful, jarring, shocking, funny, cute, or aggressively virtuous my content was, internally I remained empty.
+Regardless of how much content I consumed, internally I remained empty.
+
+Every perfect post was equally as rotten as the next. 
+All of them a facade for our collective internal void.
 
 Virtue signaling. Aggressive. Virtue signaling.
 And for who? Who was I trying to convince?
+Who was anyone trying to convince?
+We were all here for ourselves and our own selfish reasons.
 
-Broadcasting virtue to the world will never provide internal fulfillment. 
+How can anyone farming a void on emptiness internally enact change?
+No wonder hopelessness was creeping in.
+
+Broadcasting virtue to the world will never provide internal fulfillment regardless of how true it may be.
 Virtue signaling is effective in shifting public perception, but remains powerless in shifting an internal self-image.
+
+You can't tweet your way to self-respect.
 
 Social media has provided a mass platform for extraordinary volumes of external engagement.
 However it has robbed us of the most critical dialogue, our dialogue with ourselves.
 
-I see millions of empty users crying out for more validation.
+I see millions of empty users crying out for more validation -- all of them failing to find it from external sources.
 
-Slipping further and further away from a sense of self.
+Slipping further and further away from self.
 Slipping further and further into the delusion that somehow external acceptance will remedy the void growing inside.
 
 The ego.
 
 Social media aggravates the ego.
 
-I am attempting to kill mine, or at least substantially weaken it. 
+I want to kill my ego, or at least substantially break it.
 
 As with an trauma, there is an inverse response to counter traumatic damage.
 You "over index". 
