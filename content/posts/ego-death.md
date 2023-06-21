@@ -27,11 +27,14 @@ The more repulsive, the better.
 Akin to "Curiosity Slowing" of traffic passing a gruesome accident. 
 Everyone wants to slow to gawk at the carnage -- nobody wants to stop and lend a hand.
 
-There is no argument that horrific things are occuring in the world. 
-However a mass separation from hope feels new.
+There is no argument that horrific things are occuring in the world.
+
+However a mass loss of hope feels... new.
+
 We have lost our prerogative to enact change.
 We aren't using social media to drive action.
 We are using it to farm a false sense of worth, and to cast stones at anyone who foolishly stumbles into a virtue-trap.
+Petty nuance has replaced bold hope.
 
 This observation shakes me to my core.
 
