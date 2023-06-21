@@ -33,7 +33,8 @@ However a mass loss of hope feels... new.
 
 We have lost our prerogative to enact change.
 We aren't using social media to drive action.
-We are using it to farm a false sense of worth, and to cast stones at anyone who foolishly stumbles into a virtue-trap.
+We are using it to farm a false sense of worth. 
+To cast stones at anyone who foolishly stumbles into the latest virtue-trap.
 Petty nuance has replaced bold hope.
 
 This observation shakes me to my core.
