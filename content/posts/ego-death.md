@@ -29,12 +29,17 @@ In most cases, I deeply believe the majority of the world's virtuous are common.
 We all want peace, joy, safety, and comfort. We all want to smile.
 
 Social media seems to have a way of pushing dialogue to extremes.
-I remember feeling compelled to send stronger and stronger signals into the abyss.
+I remember feeling compelled to send stronger and more righteous signals into the abyss.
 I remember feeling the need to out-perform my previous display of extreme morality.
-I remember feeling that I must prove to the world, that my opinion, was the most virtuous, and the most engaging.
+I remember feeling that I must prove to the world, to the nameless and faceless audience, that my opinion was virtuous.
 There was no time to lose.
+I must deliver NOW!
+Time -- is of the essence.
+Regardless of how delightful, jarring, shocking, or aggressively virtuous my content was, internally I remained empty.
+
 
 Virtue signaling. Aggressive. Virtue signaling.
+And for who? Who was I trying to convince?
 
 Broadcasting virtue to the world will never provide internal fulfillment. 
 Virtue signaling is effective in shifting public perception, but remains powerless in shifting an internal self-image.
