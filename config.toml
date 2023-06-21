@@ -20,9 +20,9 @@ theme = "hugo-blog-awesome"
     url = '/'
     weight = 10
   [[menu.main]]
-    pageRef="posts"
-    name = 'Posts'
-    url = '/posts/'
+    pageRef="tech"
+    name = 'Tech'
+    url = '/tech/'
     weight = 20
   [[menu.main]]
     pageRef="bio"
@@ -33,7 +33,7 @@ theme = "hugo-blog-awesome"
 [params]
   sitename = "Kris Nóva"
   defaultColor = "dark"
-  description = "Complete technical works of software engineer Kris Nóva. Verified with Hachyderm. Compute runtime, Linux, Aurae, Kubernetes, Security, and Kernel topics. Distributed systems. Cyber Security. Analysis. Math."
+  description = "Complete technical works and social posts of alpinist, software engineer, and computer scientist Kris Nóva. Compute runtime, Linux, Aurae, Kubernetes, Security, and Kernel topics. Distributed systems. Cyber Security. Analysis. Math."
 
 [params.author]
   avatar = "img/nova.jpg"

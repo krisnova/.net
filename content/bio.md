@@ -4,9 +4,9 @@ description: 'Biography of Kris Nóva. Safe for distribution for events, publica
 date: '2023-03-01'
 author: Kris Nóva
 ---
-Kris Nóva (she/her) is an author, engineer, entrepreneur, and angel investor best known for her work on Linux, Kubernetes, and Aurae.
+Kris Nóva (she/her) is an author, engineer, computer scientist, and alpinist best known for her work on Linux, Kubernetes, and Aurae.
 
-Today she works as a Principal Engineer at GitHub.
+Today she works as an Engineer at GitHub.
 
 Her domain specialization is applied compute and runtime performance in the enterprise. Specifically she works with the Linux kernel, distributed runtime environments such as Aurae and Kubernetes, platform infrastructure, and open-source software engineering.
 
