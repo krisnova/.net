@@ -2,12 +2,12 @@
 title: "Ego death."
 date: 2023-06-20
 author: Kris Nóva
-description: Starting to explore what a true "static micro blog" might look like.
+description: Social media aggravates the ego. Virtuous content drifts to the extremes and becomes counter productive at scale. Focusing on external validation is futile and robs the soul of a deeper meaning.
 math: true
 tags:
-  - Microblog
-  - Update
-  - Social
+  - Social Media
+  - Virtue Signaling
+  - Self
 ---
 
 As I begin settling into a new flow of my life I find myself finding tremendous sanctuary and peace with myself. 
