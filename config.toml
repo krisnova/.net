@@ -25,10 +25,15 @@ theme = "hugo-blog-awesome"
     url = '/tech/'
     weight = 20
   [[menu.main]]
+    pageRef="posts"
+    name = 'Posts'
+    url = '/posts/'
+    weight = 30
+  [[menu.main]]
     pageRef="bio"
     name = 'Bio'
     url = '/bio/'
-    weight = 30
+    weight = 40
 
 [params]
   sitename = "Kris Nóva"

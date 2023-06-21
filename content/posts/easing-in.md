@@ -1,5 +1,5 @@
 ---
-title: "Easing back in. A new approach. Ego death."
+title: "Ego death."
 date: 2023-06-20
 author: Kris Nóva
 description: Starting to explore what a true "static micro blog" might look like.
@@ -63,7 +63,7 @@ This blog, and the RSS feed will slowly grow into read-only automation that will
 
 I do not intend on engaging in social media moving forward. I am too happy to change anything at the moment.
 
-Stay tuned for me.
+Stay tuned for more.
 
 
 
